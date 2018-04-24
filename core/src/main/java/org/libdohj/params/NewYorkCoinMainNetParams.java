@@ -34,45 +34,40 @@ import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptOpCodes;
 
 /**
- * Parameters for the Newyorkcoin main production network on which people trade
+ * Parameters for the NewYorkCoin main production network on which people trade
  * goods and services.
  */
-public class NewyorkcoinMainNetParams extends AbstractNewyorkcoinParams {
+public class NewYorkCoinMainNetParams extends AbstractNewYorkCoinParams {
     public static final int MAINNET_MAJORITY_WINDOW = MainNetParams.MAINNET_MAJORITY_WINDOW;
     public static final int MAINNET_MAJORITY_REJECT_BLOCK_OUTDATED = MainNetParams.MAINNET_MAJORITY_REJECT_BLOCK_OUTDATED;
     public static final int MAINNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = MainNetParams.MAINNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
 
-    public NewyorkcoinMainNetParams() {
+    public NewYorkCoinMainNetParams() {
         super();
         id = ID_NY_MAINNET;
-        // Genesis hash is 12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe2
-        packetMagic = 0xfbc0b6db;
+        packetMagic = 0xc0c0c0c0;
 
         maxTarget = Utils.decodeCompactBits(0x1e0fffffL);
-        port = 9333;
-        addressHeader = 48;
-        p2shHeader = 5;
+        port = 17020;
+        addressHeader = 60;
+        p2shHeader = 22;
         acceptableAddressCodes = new int[] { addressHeader, p2shHeader };
-        dumpedPrivateKeyHeader = 176;
+        dumpedPrivateKeyHeader = 188;
 
         this.genesisBlock = createGenesis(this);
-        spendableCoinbaseDepth = 100;
-        subsidyDecreaseBlockCount = 840000;
+        spendableCoinbaseDepth = 100; //FIXME
+        subsidyDecreaseBlockCount = 840000; //FIXME
 
         String genesisHash = genesisBlock.getHashAsString();
-        checkState(genesisHash.equals("12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe2"));
-        alertSigningKey = Hex.decode("040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9");
+        checkState(genesisHash.equals("5597f25c062a3038c7fd815fe46c67dedfcb3c839fbc8e01ed4044540d08fe48"));
+        alertSigningKey = Hex.decode("4AFC6B9D279C647C67C250BC4C68F5E9BD714867D8D45B6E54FEEFFA6CB9074EE7CBF69EB8FF388304604C2E00661601502B42E3CF71E934B4A5EAB0D5B209BFD");
 
         majorityEnforceBlockUpgrade = MAINNET_MAJORITY_ENFORCE_BLOCK_UPGRADE;
         majorityRejectBlockOutdated = MAINNET_MAJORITY_REJECT_BLOCK_OUTDATED;
         majorityWindow = MAINNET_MAJORITY_WINDOW;
 
         dnsSeeds = new String[] {
-            "dnsseed.newyorkcointools.com",
-            "dnsseed.newyorkcoinpool.org",
-            "dnsseed.ltc.xurious.com",
-            "dnsseed.koin-project.com",
-            "dnsseed.weminemnc.com"
+            "dnsseed.newyorkcoin.money"
         };
         bip32HeaderPub = 0x0488B21E;
         bip32HeaderPriv = 0x0488ADE4;
@@ -87,24 +82,24 @@ public class NewyorkcoinMainNetParams extends AbstractNewyorkcoinParams {
             t.addInput(new TransactionInput(params, t, bytes));
             ByteArrayOutputStream scriptPubKeyBytes = new ByteArrayOutputStream();
             Script.writeBytes(scriptPubKeyBytes, Hex.decode
-                    ("040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9"));
+                    ("4AFC6B9D279C647C67C250BC4C68F5E9BD714867D8D45B6E54FEEFFA6CB9074EE7CBF69EB8FF388304604C2E00661601502B42E3CF71E934B4A5EAB0D5B209BFD"));
             scriptPubKeyBytes.write(ScriptOpCodes.OP_CHECKSIG);
-            t.addOutput(new TransactionOutput(params, t, COIN.multiply(50), scriptPubKeyBytes.toByteArray()));
+            t.addOutput(new TransactionOutput(params, t, COIN.multiply(907477), scriptPubKeyBytes.toByteArray()));
         } catch (Exception e) {
             // Cannot happen.
             throw new RuntimeException(e);
         }
         genesisBlock.addTransaction(t);
-        genesisBlock.setTime(1317972665L);
+        genesisBlock.setTime(1394102925L);
         genesisBlock.setDifficultyTarget(0x1e0ffff0L);
-        genesisBlock.setNonce(2084524493);
+        genesisBlock.setNonce(2482334);
         return genesisBlock;
     }
 
-    private static NewyorkcoinMainNetParams instance;
-    public static synchronized NewyorkcoinMainNetParams get() {
+    private static NewYorkCoinMainNetParams instance;
+    public static synchronized NewYorkCoinMainNetParams get() {
         if (instance == null) {
-            instance = new NewyorkcoinMainNetParams();
+            instance = new NewYorkCoinMainNetParams();
         }
         return instance;
     }

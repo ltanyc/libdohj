@@ -33,16 +33,16 @@ import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptOpCodes;
 
 /**
- * Parameters for the testnet, a separate public instance of Newyorkcoin that has
+ * Parameters for the testnet, a separate public instance of NewYorkCoin that has
  * relaxed rules suitable for development and testing of applications and new
- * Newyorkcoin versions.
+ * NewYorkCoin versions.
  */
-public class NewyorkcoinTestNet3Params extends AbstractNewyorkcoinParams {
+public class NewYorkCoinTestNet3Params extends AbstractNewYorkCoinParams {
     public static final int TESTNET_MAJORITY_WINDOW = 100;
     public static final int TESTNET_MAJORITY_REJECT_BLOCK_OUTDATED = 75;
     public static final int TESTNET_MAJORITY_ENFORCE_BLOCK_UPGRADE = 51;
 
-    public NewyorkcoinTestNet3Params() {
+    public NewYorkCoinTestNet3Params() {
         super();
         id = ID_NY_TESTNET;
         // Genesis hash is f5ae71e26c74beacc88382716aced69cddf3dffff24f384e1808905e0188f68f
@@ -100,10 +100,10 @@ public class NewyorkcoinTestNet3Params extends AbstractNewyorkcoinParams {
         return genesisBlock;
     }
 
-    private static NewyorkcoinTestNet3Params instance;
-    public static synchronized NewyorkcoinTestNet3Params get() {
+    private static NewYorkCoinTestNet3Params instance;
+    public static synchronized NewYorkCoinTestNet3Params get() {
         if (instance == null) {
-            instance = new NewyorkcoinTestNet3Params();
+            instance = new NewYorkCoinTestNet3Params();
         }
         return instance;
     }

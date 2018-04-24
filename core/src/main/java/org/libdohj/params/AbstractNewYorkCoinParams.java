@@ -28,9 +28,9 @@ import java.math.BigInteger;
 import static org.bitcoinj.core.Coin.COIN;
 
 /**
- * Common parameters for Newyorkcoin networks.
+ * Common parameters for NewYorkCoin networks.
  */
-public abstract class AbstractNewyorkcoinParams extends NetworkParameters implements AltcoinNetworkParameters {
+public abstract class AbstractNewYorkCoinParams extends NetworkParameters implements AltcoinNetworkParameters {
     /** Standard format for the NY denomination. */
     public static final MonetaryFormat NY;
     /** Standard format for the mNY denomination. */
@@ -38,15 +38,15 @@ public abstract class AbstractNewyorkcoinParams extends NetworkParameters implem
     /** Standard format for the NYoshi denomination. */
     public static final MonetaryFormat NYOSHI;
 
-    public static final int NY_TARGET_TIMESPAN = (int) (30); // 30 seconds
+    public static final int NY_TARGET_TIMESPAN = (int) (2 * 60 * 60); // 2 hrs
     public static final int NY_TARGET_SPACING = (int) (30); // 30 seconds
     public static final int NY_INTERVAL = NY_TARGET_TIMESPAN / NY_TARGET_SPACING;
 
-    /** Currency code for base 1 Newyorkcoin. */
+    /** Currency code for base 1 NewYorkCoin. */
     public static final String CODE_NY = "NY";
-    /** Currency code for base 1/1,000 Newyorkcoin. */
+    /** Currency code for base 1/1,000 NewYorkCoin. */
     public static final String CODE_MNY = "mNY";
-    /** Currency code for base 1/100,000,000 Newyorkcoin. */
+    /** Currency code for base 1/100,000,000 NewYorkCoin. */
     public static final String CODE_NYOSHI = "NYoshi";
 
     static {
@@ -66,26 +66,31 @@ public abstract class AbstractNewyorkcoinParams extends NetworkParameters implem
     public static final String ID_NY_REGTEST = "regtest";
 
     public static final int NYCOIN_PROTOCOL_VERSION_MINIMUM = 70002;
-    public static final int NYCOIN_PROTOCOL_VERSION_CURRENT = 70003;
+    public static final int NYCOIN_PROTOCOL_VERSION_CURRENT = 70005;
 
-    private static final Coin BASE_SUBSIDY = COIN.multiply(50);
+    private static final Coin BASE_SUBSIDY = COIN.multiply(10000);
 
-    protected Logger log = LoggerFactory.getLogger(AbstractNewyorkcoinParams.class);
+    protected Logger log = LoggerFactory.getLogger(AbstractNewYorkCoinParams.class);
 
-    public AbstractNewyorkcoinParams() {
+    public AbstractNewYorkCoinParams() {
         super();
         interval = NY_INTERVAL;
         targetTimespan = NY_TARGET_TIMESPAN;
         maxTarget = Utils.decodeCompactBits(0x1e0fffffL);
 
-        packetMagic = 0xfbc0b6db;
-        bip32HeaderPub = 0x0488C42E; //The 4 byte header that serializes in base58 to "xpub". (?)
-        bip32HeaderPriv = 0x0488E1F4; //The 4 byte header that serializes in base58 to "xprv" (?)
+        packetMagic = 0xc0c0c0c0;
+        bip32HeaderPub = 0x0488B21E; //The 4 byte header that serializes in base58 to "xpub". (?)
+        bip32HeaderPriv = 0x0488ADE4; //The 4 byte header that serializes in base58 to "xprv" (?)
     }
 
     @Override
     public Coin getBlockSubsidy(final int height) {
-        return BASE_SUBSIDY.shiftRight(height / getSubsidyDecreaseBlockCount());
+        if (height == 0)
+            return COIN.multiply(907477);
+        if (height < 600000)
+            throw new VerificationException("getBlockSubsidy() for this hight is not supported");
+        return BASE_SUBSIDY;
+        // return BASE_SUBSIDY.shiftRight(height / getSubsidyDecreaseBlockCount());
     }
 
     /**
@@ -115,6 +120,11 @@ public abstract class AbstractNewyorkcoinParams extends NetworkParameters implem
         return false;
     }
 
+    @Override
+    public Coin getMaxMoney() {
+        return Coin.COIN;
+    }
+
 
     @Override
     public void checkDifficultyTransitions(StoredBlock storedPrev, Block nextBlock, BlockStore blockStore)
@@ -133,7 +143,7 @@ public abstract class AbstractNewyorkcoinParams extends NetworkParameters implem
 
     /**
      * Get the difficulty target expected for the next block. This includes all
-     * the weird cases for Newyorkcoin such as testnet blocks which can be maximum
+     * the weird cases for NewYorkCoin such as testnet blocks which can be maximum
      * difficulty if the block interval is high enough.
      *
      * @throws CheckpointEncounteredException if a checkpoint is encountered while
@@ -150,7 +160,7 @@ public abstract class AbstractNewyorkcoinParams extends NetworkParameters implem
         if ((storedPrev.getHeight() + 1) % retargetInterval != 0) {
             if (this.allowMinDifficultyBlocks()) {
                 // Special difficulty rule for testnet:
-                // If the new block's timestamp is more than 5 minutes
+                // If the new block's timestamp is more than 2x target
                 // then allow mining of a min-difficulty block.
                 if (nextBlock.getTimeSeconds() > prev.getTimeSeconds() + getTargetSpacing() * 2) {
                     return Utils.encodeCompactBits(maxTarget);
@@ -180,7 +190,7 @@ public abstract class AbstractNewyorkcoinParams extends NetworkParameters implem
         StoredBlock cursor = storedPrev;
         int goBack = retargetInterval - 1;
 
-        // Newyorkcoin: This fixes an issue where a 51% attack can change difficulty at will.
+        // NewYorkCoin: This fixes an issue where a 51% attack can change difficulty at will.
         // Go back the full period unless it's the first retarget after genesis.
         // Code based on original by Art Forz
         if (cursor.getHeight()+1 != retargetInterval)

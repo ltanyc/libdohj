@@ -29,10 +29,10 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * Network parameters for the regression test mode of bitcoind in which all blocks are trivially solvable.
  */
-public class NewyorkcoinRegTestParams extends NewyorkcoinTestNet3Params {
+public class NewYorkCoinRegTestParams extends NewYorkCoinTestNet3Params {
     private static final BigInteger MAX_TARGET = new BigInteger("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16);
 
-    public NewyorkcoinRegTestParams() {
+    public NewYorkCoinRegTestParams() {
         super();
         // Difficulty adjustments are disabled for regtest.
         // By setting the block interval for difficulty adjustments to Integer.MAX_VALUE we make sure difficulty never changes.
@@ -53,12 +53,12 @@ public class NewyorkcoinRegTestParams extends NewyorkcoinTestNet3Params {
 
 
     /**
-     * Extract from Newyorkcoin source code, definition of regtest params.
+     * Extract from NewYorkCoin source code, definition of regtest params.
      * https://github.com/newyorkcoin-project/newyorkcoin/blob/edc66b374ea68107c721062152dd95e6aa037d53/src/chainparams.cpp
      */
     @Override
     public Block getGenesisBlock() {
-        synchronized (NewyorkcoinRegTestParams.class) {
+        synchronized (NewYorkCoinRegTestParams.class) {
             if (genesis == null) {
                 genesis = super.getGenesisBlock();
                 genesis.setNonce(0);
@@ -73,11 +73,11 @@ public class NewyorkcoinRegTestParams extends NewyorkcoinTestNet3Params {
         }
     }
 
-    private static NewyorkcoinRegTestParams instance;
+    private static NewYorkCoinRegTestParams instance;
 
-    public static synchronized NewyorkcoinRegTestParams get() {
+    public static synchronized NewYorkCoinRegTestParams get() {
         if (instance == null) {
-            instance = new NewyorkcoinRegTestParams();
+            instance = new NewYorkCoinRegTestParams();
         }
         return instance;
     }
